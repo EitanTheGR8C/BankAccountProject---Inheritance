@@ -12,25 +12,26 @@ namespace BankAccount
      * Part 1 of project: 
      *  (Basic class creation code)
      *  Stages 1, 2, and 3.
-     *  Next to each remark from this part will have "(part 1)" writen at the end of it,
-     *  or will have a remark stating this fact.
-     *  Includes BasicAccount, SavingAccount, CheckingAccount and checks in Program classes.
      * 
      * Part 2 of the project:
      * (Inheritance code)
      * Stages 4 and 5.
-     * If needed will include remark saying "(part 2)" same as part 1, but only if necessary.
-     * Includes Updated BasicAccount, SavingAccount, and CheckingAccount, new class BusinessAccount, and more checks in Program class.
      * 
-     * Almost all is the same between the parts so if something is kept the same no remark for which stage it came from.
      * 
      * Part 3 of the project:
+     * (Pre-Polymorphism Exercise)
+     * Stages 6 to 11 (included)
      * 
+     * Part 4 -f the project:
+     * (Polymorphism Exercise)
+     * Stages 12 and 13
      */
     internal class Program
     {
         static void Main(string[] args)
         {
+            #region from last homework
+            /*
             Console.WriteLine("\n1. Testing Checking Accounts:\n");
             TestCheckingAccount();
 
@@ -42,6 +43,15 @@ namespace BankAccount
 
             Console.WriteLine("\n4. Testing Business Accounts:\n");
             TestBusinessAccount();
+            */
+            #endregion from last homework
+
+            //Part 3:
+
+
+            //Part 4:
+
+
         }
 
 
