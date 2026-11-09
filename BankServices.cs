@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 namespace BankAccount
 {
     internal class BankServices
-    {//From Part 3
+    {//From Part 3 & 4
         private BasicAccount[] accounts;//6
 
         public BankServices(int size)//asuming positive or 0
@@ -128,6 +128,66 @@ namespace BankAccount
             if (IDAndAmountCNT == 0)
                 return null;
             return accounts[maxIndex].GetOwnerID();
+        }
+
+
+        // === Part 4 === 
+        private SavingAccount[] ZeroSavings()//Q12
+        {
+            if(accounts == null || accounts.Length == 0)
+                return null;
+            SavingAccount[] accountsRet = new SavingAccount[0];
+            for (int i = 0; i < accounts.Length; i++)
+            {
+                if (accounts[i].GetType() == typeof(SavingAccount))
+                {
+                    if (accounts[i].GetAccountBalance() == 0)
+                    {
+                        SavingAccount SAccount = (SavingAccount)accounts[i];
+                        Array.Resize(ref  accountsRet, accountsRet.Length + 1);
+                        accountsRet[accountsRet.Length - 1] = SAccount;
+                    }
+                }
+            }
+            if (accountsRet != null || accountsRet.Length == 0)
+                return null;
+            return accountsRet;
+        }
+
+        public string[] LoanSuggestion()
+        {
+            if (accounts == null)
+                return new string[0];
+
+            string[] result = new string[0];
+
+            for (int i = 0; i < accounts.Length; i++)
+            {
+                if (accounts[i] == null)
+                    continue;
+
+                if (accounts[i] is CheckingAccount)
+                {
+                    CheckingAccount acc = (CheckingAccount)accounts[i];
+                    double balance = acc.GetAccountBalance();
+
+                    if (balance < 0 && -balance > acc.GetPermittedOverdraftAmount() / 2)
+                    {
+                        string accountType = "Checking";
+                        if (acc is BusinessAccount)
+                            accountType = "Business";
+
+                        string line = $"Type:{accountType}, Num:{acc.GetAccountNumber()}, ID:{acc.GetOwnerID()}, Balance:{-balance}";
+
+                        if (acc is BusinessAccount)
+                            line += ", Business:" + ((BusinessAccount)acc).GetBusinessName();
+
+                        Array.Resize(ref result, result.Length + 1);
+                        result[result.Length - 1] = line;
+                    }
+                }
+            }
+            return result;
         }
 
     }
