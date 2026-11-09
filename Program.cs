@@ -46,16 +46,157 @@ namespace BankAccount
             */
             #endregion from last homework
 
-            //Part 3:
-
-
-            //Part 4:
+            #region part 3 & 4
+            Console.WriteLine("\n5. Testing Bank Services:\n");
+            TestBankServices();
+            #endregion part 3 & 4
 
 
         }
 
+        public static void TestBankServices()//Part 3 and 4
+        {
+            SavingAccount sav1 = new SavingAccount(1, 1, 1001, "owner1", new DateTime(2025, 12, 31));
+            CheckingAccount chk1 = new CheckingAccount(1, 1, 1002, "owner1");
+            BusinessAccount biz1 = new BusinessAccount(2, 2, 2001, "bizOwner1", "Business1");
+            SavingAccount sav2 = new SavingAccount(2, 2, 2002, "owner2", new DateTime(2025, 12, 31));
+            SavingAccount sav3 = new SavingAccount(3, 3, 3001, "owner3", new DateTime(2025, 12, 31));
+            CheckingAccount chk2 = new CheckingAccount(3, 3, 3002, "owner3");
 
+            sav1.Deposit(1000);
+            chk1.Deposit(500);
+            biz1.Deposit(2000);
+            chk2.Withdraw(600);
 
+            BankServices bank = new BankServices(6);
+
+            Console.WriteLine("Testing Add (Q7):");
+            Console.WriteLine($"Add sav1 returns: {bank.Add(sav1)} (expected True)");
+            Console.WriteLine($"Add chk1 returns: {bank.Add(chk1)} (expected True)");
+            Console.WriteLine($"Add biz1 returns: {bank.Add(biz1)} (expected True)");
+            Console.WriteLine($"Add sav2 returns: {bank.Add(sav2)} (expected True)");
+            Console.WriteLine($"Add sav3 returns: {bank.Add(sav3)} (expected True)");
+            Console.WriteLine($"Add chk2 returns: {bank.Add(chk2)} (expected True)");
+
+            CheckingAccount extra = new CheckingAccount(9, 9, 9001, "owner9");
+            Console.WriteLine($"Add extra when full returns: {bank.Add(extra)} (expected False)");
+
+            Console.WriteLine("\nTesting GetAccountDetails (Q8):");
+            string details = bank.GetAccountDetails(1002);
+            Console.WriteLine($"Details for 1002: {details}");
+            Console.WriteLine("(expected the details of account 1002)");
+            Console.WriteLine($"GetAccountDetails(9999) is empty: {bank.GetAccountDetails(9999) == ""} (expected True)");
+
+            Console.WriteLine("\nTesting GetAccountCount (Q9):");
+            Console.WriteLine($"GetAccountCount(1002) returns: {bank.GetAccountCount(1002)} (expected 2)");
+            Console.WriteLine($"GetAccountCount(9999) returns: {bank.GetAccountCount(9999)} (expected 0)");
+
+            Console.WriteLine("\nTesting GetAccountsWithID (Q10):");
+            BasicAccount[] owner1Accounts = bank.GetAccountsWithID("owner1");
+            if (owner1Accounts == null)
+            {
+                Console.WriteLine("GetAccountsWithID(owner1) returned null (expected 2 accounts)");
+            }
+            else
+            {
+                Console.WriteLine($"GetAccountsWithID(owner1) found {owner1Accounts.Length} accounts (expected 2):");
+                for (int i = 0; i < owner1Accounts.Length; i++)
+                {
+                    if (owner1Accounts[i] == null)
+                        Console.WriteLine("null account returned (unexpected)");
+                    else
+                        Console.WriteLine(owner1Accounts[i].GetAccountNumber() + " (expected 1001 and 1002)");
+                }
+            }
+
+            BasicAccount[] nobodyAccounts = bank.GetAccountsWithID("nobody");
+            Console.WriteLine($"GetAccountsWithID(nobody) is null: {nobodyAccounts == null} (expected True)");
+            Console.WriteLine("\nTesting GetIDRichest (Q11):");
+            Console.WriteLine($"GetIDRichest returns: {bank.GetIDRichest()} (expected bizOwner1)");
+
+            Console.WriteLine("\nTesting ZeroSavings (Q12):");
+            SavingAccount[] zeroAccounts = bank.ZeroSavings();
+            if (zeroAccounts == null)
+            {
+                Console.WriteLine("ZeroSavings returned null (expected 2 accounts)");
+            }
+            else
+            {
+                Console.WriteLine($"ZeroSavings found {zeroAccounts.Length} accounts (expected 2):");
+                for (int i = 0; i < zeroAccounts.Length; i++)
+                {
+                    if (zeroAccounts[i] == null)
+                        Console.WriteLine("null account returned (unexpected)");
+                    else
+                        Console.WriteLine(zeroAccounts[i].GetAccountNumber() + " (expected 2002 and 3001)");
+                }
+            }
+
+            Console.WriteLine("\nTesting LoanSuggestion (Q13):");
+            string[] loans = bank.LoanSuggestion();
+            if (loans == null)
+            {
+                Console.WriteLine("LoanSuggestion returned null (expected 1 suggestion)");
+            }
+            else
+            {
+                Console.WriteLine($"LoanSuggestion found {loans.Length} suggestions (expected 1):");
+                for (int i = 0; i < loans.Length; i++)
+                {
+                    if (loans[i] == null)
+                        Console.WriteLine("null suggestion returned (unexpected)");
+                    else
+                        Console.WriteLine(loans[i] + " (expected Type:Checking, Num:3002, ID:owner3, Balance:600)");
+                }
+            }
+
+            Console.WriteLine("\nTesting with empty slots:");
+            BankServices bankWithEmptySlots = new BankServices(4);
+            Console.WriteLine($"Add sav1 returns: {bankWithEmptySlots.Add(sav1)} (expected True)");
+            Console.WriteLine($"Add sav2 returns: {bankWithEmptySlots.Add(sav2)} (expected True)");
+            Console.WriteLine($"GetAccountDetails(9999) is empty: {bankWithEmptySlots.GetAccountDetails(9999) == ""} (expected True)");
+            Console.WriteLine($"GetAccountCount(1001) returns: {bankWithEmptySlots.GetAccountCount(1001)} (expected 1)");
+            Console.WriteLine($"GetAccountCount(9999) returns: {bankWithEmptySlots.GetAccountCount(9999)} (expected 0)");
+            Console.WriteLine($"GetIDRichest returns: {bankWithEmptySlots.GetIDRichest()} (expected owner1)");
+
+            SavingAccount[] emptySlotZeroAccounts = bankWithEmptySlots.ZeroSavings();
+            if (emptySlotZeroAccounts == null)
+            {
+                Console.WriteLine("ZeroSavings with empty slots returned null (expected account 2002)");
+            }
+            else
+            {
+                Console.WriteLine($"ZeroSavings with empty slots found {emptySlotZeroAccounts.Length} accounts (expected 1):");
+                for (int i = 0; i < emptySlotZeroAccounts.Length; i++)
+                {
+                    if (emptySlotZeroAccounts[i] == null)
+                        Console.WriteLine("null account returned (unexpected)");
+                    else
+                        Console.WriteLine(emptySlotZeroAccounts[i].GetAccountNumber() + " (expected 2002)");
+                }
+            }
+            string[] emptySlotLoans = bankWithEmptySlots.LoanSuggestion();
+            if (emptySlotLoans == null)
+                Console.WriteLine("LoanSuggestion with empty slots returned null (expected 0 suggestions)");
+            else
+                Console.WriteLine($"LoanSuggestion with empty slots returns {emptySlotLoans.Length} suggestions (expected 0)");
+
+            Console.WriteLine("\nTesting with a null accounts array:");
+            BankServices nullArrayBank = new BankServices(3);
+            nullArrayBank.SetAccounts(null);
+            Console.WriteLine($"Add returns: {nullArrayBank.Add(sav1)} (expected False)");
+            Console.WriteLine($"GetAccountDetails(1001) is empty: {nullArrayBank.GetAccountDetails(1001) == ""} (expected True)");
+            Console.WriteLine($"GetAccountCount(1001) returns: {nullArrayBank.GetAccountCount(1001)} (expected 0)");
+            Console.WriteLine($"GetAccountsWithID(owner1) is null: {nullArrayBank.GetAccountsWithID("owner1") == null} (expected True)");
+            Console.WriteLine($"GetIDRichest is null: {nullArrayBank.GetIDRichest() == null} (expected True)");
+            Console.WriteLine($"ZeroSavings is null: {nullArrayBank.ZeroSavings() == null} (expected True)");
+
+            string[] nullArrayLoans = nullArrayBank.LoanSuggestion();
+            if (nullArrayLoans == null)
+                Console.WriteLine("LoanSuggestion with a null array returned null (expected 0 suggestions)");
+            else
+                Console.WriteLine($"LoanSuggestion with a null array returns {nullArrayLoans.Length} suggestions (expected 0)");
+        }
         static void TestCheckingAccount()//from part 1
         {
             CheckingAccount account1 = new CheckingAccount(123, 456, 789, "owner1");
@@ -97,7 +238,6 @@ namespace BankAccount
             Console.WriteLine(account1.ToString());
             Console.WriteLine(account2.ToString());
         }
-
         static void TestSavingAccount()//from part 1
         {
             SavingAccount account1 = new SavingAccount(123, 456, 789, "owner1", new DateTime(2025, 12, 31));
@@ -137,7 +277,6 @@ namespace BankAccount
             Console.WriteLine(account1.ToString());
             Console.WriteLine(account2.ToString());
         }
-
         static void TestBasicAccount()//from part 1
         {
             BasicAccount account1 = new BasicAccount(123, 456, 789, "owner1");
@@ -155,9 +294,7 @@ namespace BankAccount
             Console.WriteLine($"Owner ID: {account2.GetOwnerID()}");
             Console.WriteLine($"Account Balance: {account2.GetAccountBalance()}");
         }
-
-
-        static void TestBusinessAccount()
+        static void TestBusinessAccount()//from part 1,2
         {
             BusinessAccount account1 = new BusinessAccount(111, 222, 333, "bizOwner1", "Business1");
             BusinessAccount account2 = new BusinessAccount(444, 555, 666, "bizOwner2", 3000.0, "Business2");
