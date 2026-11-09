@@ -21,10 +21,9 @@ namespace BankAccount
         public void SetAccounts(BasicAccount[] new_accounts)
         { this.accounts = new_accounts; }
 
-
         public bool Add(BasicAccount to_add)//7
         {
-            for (int i = 0; i < accounts.Length && accounts != null; i++)
+            for (int i = 0; accounts != null && i < accounts.Length; i++)
             {
                 if (accounts[i] == null)
                 {
@@ -37,11 +36,11 @@ namespace BankAccount
 
         public string GetAccountDetails(int accountNumber)//assuming only one exists
         {//Q8
-            if(accounts == null)
+            if (accounts == null)
                 return "";
             for (int i = 0; i < accounts.Length; i++)
             {
-                if (accounts[i].GetAccountNumber() == accountNumber)
+                if (accounts[i] != null && accounts[i].GetAccountNumber() == accountNumber)
                 {
                     return accounts[i].ToString();
                 }
@@ -51,20 +50,28 @@ namespace BankAccount
 
         public int GetAccountCount(int accountNumber)//assuming only one exists
         {//Q9
+            if (accounts == null)
+                return 0;
             string id = "";
-            int cnt = 0;
             bool found = false;
-            for (int i = 0; i < accounts.Length && accounts != null; i++)
+            for (int i = 0; i < accounts.Length; i++)
             {
-                if (!found && accounts[i].GetAccountNumber() == accountNumber)
+                if (accounts[i] != null && accounts[i].GetAccountNumber() == accountNumber)
                 {
                     id = accounts[i].GetOwnerID();
                     found = true;
                 }
-                if (accounts[i].GetOwnerID() == id && found)
-                { cnt++; }
             }
-
+            if (!found)
+                return 0;
+            int cnt = 0;
+            for (int i = 0; i < accounts.Length; i++)
+            {
+                if (accounts[i] != null && accounts[i].GetOwnerID() == id)
+                {
+                    cnt++;
+                }
+            }
             return cnt;
         }
 
@@ -132,24 +139,24 @@ namespace BankAccount
 
 
         // === Part 4 === 
-        private SavingAccount[] ZeroSavings()//Q12
+        public SavingAccount[] ZeroSavings()//Q12
         {
-            if(accounts == null || accounts.Length == 0)
+            if (accounts == null || accounts.Length == 0)
                 return null;
             SavingAccount[] accountsRet = new SavingAccount[0];
             for (int i = 0; i < accounts.Length; i++)
             {
-                if (accounts[i].GetType() == typeof(SavingAccount))
+                if (accounts[i] != null && accounts[i].GetType() == typeof(SavingAccount))
                 {
                     if (accounts[i].GetAccountBalance() == 0)
                     {
                         SavingAccount SAccount = (SavingAccount)accounts[i];
-                        Array.Resize(ref  accountsRet, accountsRet.Length + 1);
+                        Array.Resize(ref accountsRet, accountsRet.Length + 1);
                         accountsRet[accountsRet.Length - 1] = SAccount;
                     }
                 }
             }
-            if (accountsRet != null || accountsRet.Length == 0)
+            if (accountsRet.Length == 0)
                 return null;
             return accountsRet;
         }
